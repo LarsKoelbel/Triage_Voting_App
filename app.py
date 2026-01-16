@@ -73,9 +73,9 @@ def example_post():
         return jsonify({}), 200
 
     client_ip = request.remote_addr
-    if client_ip in IPS:
-        print(f'A new request from {client_ip} was blocked')
-        return jsonify({}), 200
+    #if client_ip in IPS:
+    #    print(f'A new request from {client_ip} was blocked')
+    #    return jsonify({}), 200
 
     key = data["key"]
     if key in VOTES:
