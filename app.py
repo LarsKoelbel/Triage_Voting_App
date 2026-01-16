@@ -1,7 +1,4 @@
 import threading
-from multiprocessing.pool import CLOSE
-from time import sleep
-from xmlrpc.client import FastParser
 
 from flask import Flask, send_from_directory, request, Response, jsonify, redirect
 
@@ -136,5 +133,5 @@ def cli_thread():
 
 if __name__ == "__main__":
     threading.Thread(target=cli_thread, daemon=True).start()
-    app.run(debug=False, use_reloader=False, port=3011, host='0.0.0.0')
+    app.run(debug=False, use_reloader=False, port=3012, host='0.0.0.0')
 
