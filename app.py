@@ -85,9 +85,9 @@ def example_post():
         return jsonify({}), 200
 
     client_id = data['id']
-    #if client_id in IDS:
-    #    print(f'A new request from {client_id} was blocked')
-    #    return jsonify({}), 200
+    if client_id in IDS:
+        print(f'A new request from {client_id} was blocked')
+        return jsonify({}), 200
 
     key = data["key"]
     if key in VOTES:
@@ -100,7 +100,6 @@ def example_post():
 
 @app.route("/api/get-vote-if-exists", methods=["POST"])
 def get_vote_if_exists():
-    return jsonify({'status': 'false'}), 200
     data = request.get_json()
     if not data or "id" not in data:
         return jsonify({"error": "No id provided"}), 400
