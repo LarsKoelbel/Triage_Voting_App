@@ -155,7 +155,7 @@ async function notifyServerVoteCast(target)
         if (resp.ok) {
             setTimeout(async () => {
                 document.getElementById("headliner").style.display = "flex";
-            }, 1000);
+            }, 0);
             return true;
         };
         return false;
