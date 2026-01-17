@@ -60,7 +60,7 @@ VOTES = {
     'none': Character('Niemand'),
 }
 
-IPS = {}
+IDS = {}
 
 @app.route("/api/cast-vote-once", methods=["POST"])
 def example_post():
@@ -72,27 +72,33 @@ def example_post():
         print(f'A new request from was blocked, because the vote is closed')
         return jsonify({}), 200
 
-    client_ip = request.remote_addr
-    #if client_ip in IPS:
-    #    print(f'A new request from {client_ip} was blocked')
-    #    return jsonify({}), 200
+    client_id = data['id']
+    if client_id in IDS:
+        print(f'A new request from {client_id} was blocked')
+        return jsonify({}), 200
 
     key = data["key"]
     if key in VOTES:
         VOTES[key].value += 1
-        print(f'Vote cast for \'{VOTES[key].full_name}\' by {client_ip} --> Value now at {VOTES[key].value}')
-        IPS[client_ip] = key
+        print(f'Vote cast for \'{VOTES[key].full_name}\' by {client_id} --> Value now at {VOTES[key].value}')
+        IDS[client_id] = key
         return jsonify({"status": "ok"}), 200
     else:
         return jsonify({"error": "Invalid key"}), 400
 
-@app.route("/api/get-vote-if-exists")
+@app.route("/api/get-vote-if-exists", methods=["POST"])
 def get_vote_if_exists():
-    client_ip = request.remote_addr
-    if client_ip in IPS:
-        print(f'Vote found for id {client_ip}')
-        return jsonify({'status': 'ok', 'key': IPS[client_ip]}), 200
+    data = request.get_json()
+    if not data or "id" not in data:
+        return jsonify({"error": "No id provided"}), 400
+
+    voter_id = data["id"]
+    if voter_id in IDS:
+        print(f'Vote found for id {voter_id}')
+        return jsonify({'status': 'ok', 'key': IDS[voter_id]}), 200
+
     return jsonify({'status': 'false'}), 200
+
 
 def get_results_ordered():
     result = []
@@ -103,11 +109,11 @@ def get_results_ordered():
 
 # CLI thread
 def cli_thread():
-    global IPS, VOTES, OPEN, FINISHED
+    global IDS, VOTES, OPEN, FINISHED
     while True:
         i = input("Command: ").strip().lower()
         if i == 'clear':
-            IPS = {}
+            IDS = {}
             # reinitialize VOTES with fresh Character objects
             VOTES = {
                 'kap': Character('Kapitän Johnson'),

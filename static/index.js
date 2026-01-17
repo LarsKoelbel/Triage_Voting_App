@@ -133,6 +133,7 @@ async function showList()
 
 async function notifyServerVoteCast(target)
 {
+    const id = await getOrCreateVoterID();
     try
     {
         const resp = await fetch("/api/cast-vote-once", {
@@ -141,7 +142,8 @@ async function notifyServerVoteCast(target)
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                key: target
+                key: target,
+                id: id
             })
         })
 
@@ -153,24 +155,48 @@ async function notifyServerVoteCast(target)
 
 }
 
-async function getVoteIfExists()
-{
-    try
-    {
-        const resp = await fetch("/api/get-vote-if-exists")
+async function getVoteIfExists() {
+    try {
+        const voterId = await getOrCreateVoterID(); // load or create voter ID
 
-        if (resp.ok)
-        {
+        const resp = await fetch("/api/get-vote-if-exists", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: voterId })
+        });
+
+        if (resp.ok) {
             const data = await resp.json();
-            if (data)
-            {
-                if (data.status === "ok") return data.key;
+            if (data && data.status === "ok") {
+                return data.key; // return the voted key
             }
         }
+
         return null;
     } catch (e) {
+        console.error("Error fetching vote:", e);
         return null;
     }
 }
+
+
+async function getOrCreateVoterID() {
+    // Try to load existing ID
+    let voterId = localStorage.getItem("voterId");
+
+    if (!voterId) {
+        // Create a new 30-digit random numeric ID
+        voterId = "";
+        for (let i = 0; i < 30; i++) {
+            voterId += Math.floor(Math.random() * 10);
+        }
+        localStorage.setItem("voterId", voterId);
+    }
+
+    return voterId;
+}
+
 
 window.addEventListener('load', init);
