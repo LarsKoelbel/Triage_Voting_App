@@ -52,6 +52,11 @@ def res_chart():
 
     return send_from_directory('static', 'results2.html')
 
+@app.route('/manual')
+@requires_auth
+def manual():
+    return send_from_directory('static', 'manual.html')
+
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory('static', path)
@@ -108,6 +113,22 @@ def get_vote_if_exists():
     if voter_id in IDS:
         print(f'Vote found for id {voter_id}')
         return jsonify({'status': 'ok', 'key': IDS[voter_id]}), 200
+
+    return jsonify({'status': 'false'}), 200
+
+@app.route("/api/manual-set", methods=["POST"])
+def manual_set():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+
+    VOTES['kap'].value = int(data['kap'])
+    VOTES['sch'].value = int(data['sch'])
+    VOTES['mas'].value = int(data['mas'])
+    VOTES['none'].value = int(data['none'])
+
+    print(VOTES)
 
     return jsonify({'status': 'false'}), 200
 
