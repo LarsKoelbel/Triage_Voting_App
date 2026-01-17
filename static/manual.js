@@ -1,6 +1,11 @@
 async function init()
 {
     document.getElementById("button").addEventListener("click", send);
+    document.getElementById("none").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            send();
+        }
+    });
 }
 
 async function send()
