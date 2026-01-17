@@ -73,6 +73,11 @@ async function setUpList()
             alert("Der Server ist momentan nicht erreichbar. Bitte versuchen sie es später erneut");
         }
     });
+
+    document.getElementById("button").addEventListener("click", async (e) => {
+        await getOrCreateVoterID(true);
+        window.location.href = window.location.href;
+    })
 }
 
 async function showList()
@@ -147,7 +152,12 @@ async function notifyServerVoteCast(target)
             })
         })
 
-        if (resp.ok) return true;
+        if (resp.ok) {
+            setTimeout(async () => {
+                document.getElementById("headliner").style.display = "flex";
+            }, 1000);
+            return true;
+        };
         return false;
     } catch (e) {
         return false;
@@ -170,6 +180,9 @@ async function getVoteIfExists() {
         if (resp.ok) {
             const data = await resp.json();
             if (data && data.status === "ok") {
+                setTimeout(async () => {
+                    document.getElementById("headliner").style.display = "flex";
+                }, 1000);
                 return data.key; // return the voted key
             }
         }
@@ -182,9 +195,13 @@ async function getVoteIfExists() {
 }
 
 
-async function getOrCreateVoterID() {
+async function getOrCreateVoterID(regenerate = false) {
     // Try to load existing ID
-    let voterId = localStorage.getItem("voterId");
+    let voterId = null;
+    if (!regenerate)
+    {
+        voterId = localStorage.getItem("voterId");
+    }
 
     if (!voterId) {
         // Create a new 30-digit random numeric ID
