@@ -1,0 +1,75 @@
+/* Basic page setup */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#chart-container {
+    height: 90vh;
+    width: 90%;
+    padding: 40px;
+    display: flex;
+    align-items: stretch;
+    background: black;
+}
+
+#chart {
+    display: flex;
+    gap: 32px;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+}
+
+/* One column per candidate */
+.bar-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+/* Percentage label above the bar */
+.bar-percent {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Bar background container */
+.bar-bg {
+    flex: 1;                  /* fills vertical space */
+    width: 100%;
+    max-width: 80px;
+    border: 2px solid white;
+    background: transparent;
+    display: flex;
+    align-items: flex-end;    /* fill from bottom up */
+}
+
+/* Actual bar that grows */
+.bar-fill {
+    width: 100%;
+    height: 0%;               /* initial height */
+    background: white;
+    transition: height 0.6s ease;
+}
+
+/* Votes below the bar */
+.bar-votes {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Candidate name below the votes */
+.bar-name {
+    margin-top: 6px;
+    font-size: 16px;
+    text-align: center;
+}

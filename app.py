@@ -1,12 +1,11 @@
 import threading
-
 from flask import Flask, send_from_directory, request, Response, jsonify, redirect
 
 app = Flask(__name__, static_folder="static")
 
 # Simple credentials
-USERNAME = "admin"
-PASSWORD = "123456"
+USERNAME = "ida"
+PASSWORD = "123"
 
 OPEN = False
 FINISHED = False
@@ -39,6 +38,19 @@ def index():
             return send_from_directory('static', 'over.html')
         else:
             return redirect("https://www.theaterwerft.de/")
+
+# Serve index.html at /triage
+@app.route('/results')
+@requires_auth
+def res_overview():
+
+    return send_from_directory('static', 'results.html')
+
+@app.route('/chart')
+@requires_auth
+def res_chart():
+
+    return send_from_directory('static', 'results2.html')
 
 @app.route('/<path:path>')
 def static_files(path):
@@ -73,9 +85,9 @@ def example_post():
         return jsonify({}), 200
 
     client_id = data['id']
-    if client_id in IDS:
-        print(f'A new request from {client_id} was blocked')
-        return jsonify({}), 200
+    #if client_id in IDS:
+    #    print(f'A new request from {client_id} was blocked')
+    #    return jsonify({}), 200
 
     key = data["key"]
     if key in VOTES:
@@ -88,6 +100,7 @@ def example_post():
 
 @app.route("/api/get-vote-if-exists", methods=["POST"])
 def get_vote_if_exists():
+    return jsonify({'status': 'false'}), 200
     data = request.get_json()
     if not data or "id" not in data:
         return jsonify({"error": "No id provided"}), 400
@@ -99,6 +112,22 @@ def get_vote_if_exists():
 
     return jsonify({'status': 'false'}), 200
 
+@app.route("/api/get-results")
+def get_results():
+
+    status = 'closed'
+    if OPEN: status = 'open'
+    if FINISHED: status = 'fin'
+
+    responses = {
+        'status': status,
+        'result': []
+    }
+
+    for key in VOTES:
+        responses['result'].append([VOTES[key].full_name, VOTES[key].value])
+
+    return jsonify(responses), 200
 
 def get_results_ordered():
     result = []

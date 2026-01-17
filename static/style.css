@@ -1,6 +1,8 @@
 html, body {
     height: 100%;
     margin: 0;
+
+    font-family: "Lucinda Grande", "Lucinda Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
 }
 
 body {
@@ -24,8 +26,6 @@ li {
     height: 100%;
     border: 1px solid #ffe1bf;
     border-radius: 30px;
-
-    font-family: "Lucinda Grande", "Lucinda Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
 
     padding: 10px;
 
@@ -110,4 +110,77 @@ li {
     background-color: #ff7e7e;
     border: 3px solid #ff7e7e;
     color: #ff7e7e;
+}
+
+.header-blue {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+
+    width: 100%;
+    padding: 10px;
+
+    background-color: #4fffe6;
+    border: 2px solid #7eceff;
+
+    svg {
+        height: 1em;
+        width: 1em;
+    }
+}
+
+.header-red {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+
+    width: 100%;
+    padding: 10px;
+
+    background-color: #ff4f4f;
+    border: 2px solid #ff7e7e;
+
+    svg {
+        height: 1em;
+        width: 1em;
+    }
+}
+
+.header-green {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+
+    width: 100%;
+    padding: 10px;
+
+    background-color: #b0ff4f;
+    border: 2px solid #a3ff7e;
+
+    svg {
+        height: 1em;
+        width: 1em;
+    }
+}
+
+.svg-spinner {
+    width: 32px;
+    height: 32px;
+    animation: svg-spin 3s linear infinite;
+}
+
+@keyframes svg-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.invisible {
+    display: none;
 }
