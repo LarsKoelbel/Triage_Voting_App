@@ -52,6 +52,12 @@ def res_chart():
 
     return send_from_directory('static', 'results2.html')
 
+@app.route('/chart2')
+#@requires_auth
+def res_chart_2():
+
+    return send_from_directory('static', 'results3.html')
+
 @app.route('/manual')
 #@requires_auth
 def manual():
@@ -63,18 +69,19 @@ def static_files(path):
 
 # Voting system
 class Character:
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.full_name = name
         self.value = 0
+        self.id = id
 
     def __repr__(self):
         return f'{self.full_name}: {self.value}'
 
 VOTES = {
-    'kap': Character('Kapitän Johnson'),
-    'sch': Character('Arielle Fleischer'),
-    'mas': Character('Jasiel'),
-    'none': Character('Niemand'),
+    'kap': Character('Kapitän Johnson', 0),
+    'sch': Character('Arielle Fleischer', 1),
+    'mas': Character('Masseur Jasiel', 2),
+    'none': Character('Niemand', 3),
 }
 
 IDS = {}
@@ -145,7 +152,7 @@ def get_results():
     }
 
     for key in VOTES:
-        responses['result'].append([VOTES[key].full_name, VOTES[key].value])
+        responses['result'].append([VOTES[key].full_name, VOTES[key].value, VOTES[key].id])
 
     return jsonify(responses), 200
 

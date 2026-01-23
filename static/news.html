@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>MS STELLAMARIS - EXKLUSIV-BERICHT</title>
+    <style>
+        /* 1920x1080 Digital Signage Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        html, body {
+            width: 1920px;
+            height: 1080px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* News Header with Live Ticker */
+        .news-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            background: #000;
+            border-bottom: 4px solid #ff4444;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            background: linear-gradient(90deg, #1a1a1a 0%, #000 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 102;
+            border-right: 2px solid #ff4444;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        .ticker-container {
+            flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background: #000;
+            height: 100%;
+        }
+
+        .ticker-text {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff4444;
+            text-transform: uppercase;
+            padding-left: 100%;
+            animation: ticker 45s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* Layout Grid */
+        .content-container {
+            height: calc(1080px - 110px);
+            width: 96%;
+            margin: 100px auto 0;
+            display: grid;
+            grid-template-columns: 3.5fr 1fr;
+            gap: 30px;
+        }
+
+        /* Hero Headline */
+        .hero-section {
+            background: #151515;
+            border: 3px solid #ff4444;
+            border-radius: 8px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            min-height: 350px;
+        }
+
+        .hero-headline {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            color: #ffffff;
+            width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Main Content Area */
+        .article-section {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .article-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(transparent, #111);
+            pointer-events: none;
+        }
+
+        .article-header {
+            padding: 25px 40px;
+            background: #1a1a1a;
+            border-bottom: 2px solid #ff4444;
+        }
+
+        .byline {
+            font-size: 22px;
+            color: #ffcc00;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .featured-image-container {
+            position: relative;
+            height: 320px;
+            flex-shrink: 0;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(40%) brightness(0.6);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 30px 40px;
+        }
+
+        .image-title {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .article-content {
+            padding: 40px;
+            font-size: 28px;
+            line-height: 1.6;
+            color: #cccccc;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Recommended Articles */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #555;
+            text-transform: uppercase;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .recommended-article {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recommended-thumb {
+            height: 110px;
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid #333;
+        }
+
+        .recommended-content {
+            padding: 15px;
+        }
+
+        .recommended-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .recommended-excerpt {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="news-header">
+    <div class="logo-container">
+        <div class="logo">GLOBAL NEWS ONLINE</div>
+    </div>
+    <div class="ticker-container">
+        <div class="ticker-text">
+            Weltweite Krise - Estrella Virus - mehr als 50 Mio. bestätigte Fälle weltweit - 20 Länder verhängen Einreiseverbot - Flughäfen und Kreuzfahrtterminal bleiben geschlossen - Innenminister plant umgreifende Quarantänemaßnahmen - +++ +++ Weltweite Krise - Estrella Virus - mehr als 50Mio bestätigte Fälle weltweit - 20 Länder verhängen Einreiseverbot - Flughäfen und Kreuzfahrtterminal bleiben geschlossen - Innenminister plant umgreifende Quarantänemaßnahmen -
+        </div>
+    </div>
+</div>
+
+<div class="content-container">
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        <div class="hero-section">
+            <div class="hero-headline" id="mainHeadline">ABSTIMMUNG LÄUFT...</div>
+        </div>
+
+        <div class="article-section">
+            <div class="article-header">
+                <div class="byline" id="byline">BERICHT: REDAKTION STELLAMARIS</div>
+            </div>
+
+            <div class="featured-image-container">
+                <img src="https://www.kreuzfahrt-praxis.de/images/schiffe/ms%20astor%20restliche%20fotos%20ab%20no.%20152/ms-astor-187-die-dialysestation.jpg" alt="Krankenstation" class="featured-image">
+                <div class="image-overlay">
+                    <div class="image-title">LAGEBERICHT: PRIORISIERUNG AUF DECK 4</div>
+                </div>
+            </div>
+
+            <div class="article-content" id="articleText">
+                Verbindung zum Bordserver wird aufgebaut...
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-title">Weitere Nachrichten</div>
+
+        <div class="recommended-article">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Icon_of_the_Seas.jpg" class="recommended-thumb">
+            <div class="recommended-content">
+                <div class="recommended-title">Kreuzfahrtdampfer wird zum Kärkerschiff</div>
+                <div class="recommended-excerpt">Wo einst Luxus herrschte, regiert nun nackte Angst. Gerüchte über verriegelte Kabinen und warmes Bier mehren sich. Doch was ... </div>
+            </div>
+        </div>
+
+        <div class="recommended-article">
+            <img src="https://thumbs.dreamstime.com/b/forbidden-sign-cocktail-prohibition-icon-not-allowed-symbol-forbidden-symbol-cocktail-112141685.jpg" class="recommended-thumb">
+            <div class="recommended-content">
+                <div class="recommended-title">Skandal an Bord: Kapitän verbietet alle Cocktails</div>
+                <div class="recommended-excerpt">Nach Margen-Darm ausbruch - Kapitän verbietet alle Cocktail an board. Die stellvertretende Kreuzfahrtdirektorin Yasemine Kahnt teilt mit: "Über 70 Gäste wollen klagen". Wie geht es weiter mit ...</div>
+            </div>
+        </div>
+
+        <div class="recommended-article">
+            <img src="https://image.jimcdn.com/app/cms/image/transf/dimension=400x1024:format=png/path/s4c900af7a630c776/image/i94655955309d37cd/version/1768817355/image.png" class="recommended-thumb">
+            <div class="recommended-content">
+                <div class="recommended-title">Greifswalder "Theaterwerft" feiert Premiere</div>
+                <div class="recommended-excerpt">Trotz globaler Krisenstimmung: Die Premiere des neuen Stücks in Greifswald wird zum Hoffnungsschimmer für die Kulturszene. Sichern sie sich jetzt noch Karten für die ...</div>
+            </div>
+        </div>
+
+        <div class="recommended-article">
+            <img src="https://cruise.blog/sites/default/files/2021-07/56862242_2263351210594631_7113351095065247744_o.jpg" class="recommended-thumb">
+            <div class="recommended-content">
+                <div class="recommended-title">Fun Fact: Braucht ein Schiff wirklich einen Kapitän?</div>
+                <div class="recommended-excerpt">"Nein", sagt Experte, "Ich bin Sohn eines Kapitäns und ich kann ihnen versichern, das ist keine Raketenwissen...</div>
+            </div>
+        </div>
+
+        <div class="recommended-article">
+            <img src="https://98kupd.com/wp-content/uploads/2025/05/M_canceled_080122.jpg" class="recommended-thumb">
+            <div class="recommended-content">
+                <div class="recommended-title">Aktuelle Lage: Arielle Fleischer Konzerte abgesagt</div>
+                <div class="recommended-excerpt">Wie steht es wirklich um die Schlagersängerin? Das Management gibt keine Details bekannt, während Fans weltweit bangen.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function init() {
+        await updateNews();
+        setInterval(updateNews, 1000);
+    }
+
+    async function updateNews() {
+        try {
+            const resp = await fetch("/api/get-results");
+            if (!resp.ok) return;
+            const res = await resp.json();
+            if (res && res.result) updateDisplay(res.result);
+        } catch (e) { console.error("Sync-Fehler"); }
+    }
+
+    function updateDisplay(results) {
+        const sorted = [...results].sort((a, b) => b[1] - a[1]);
+        const winner = sorted[0];
+        const rawName = winner[0];
+
+        let headline = "";
+        let articleText = "";
+        let identifier = "";
+
+        if (rawName.includes("Kapitän")) {
+            identifier = "der langjährige Kapitän";
+            headline = `Estrella Virus anbord Kreuzfahrtschiff MS Stellamaris - ${identifier} bekommt einziges Beatmungsgerät!`;
+            articleText = `Der 62-jährige ${rawName}, der die MS Stellamaris durch unzählige Stürme geführt hat, wurde heute offiziell zur Priorität eins erklärt. In einer emotional geführten Sitzung des Krisenstabs hinter verschlossenen Türen setzte sich die Fraktion durch, die die Erfahrung des Kapitäns als absolut lebensnotwendig für das Überleben der gesamten Schiffsgemeinschaft ansieht. <br><br>
+    Während sich der Zustand auf der Krankenstation minütlich verschlechtert, wurde das einzige funktionsfähige Beatmungsgerät unter strengsten Sicherheitsvorkehrungen in den privaten medizinischen Trakt der Führungsebene verlegt. Crewmitglieder berichten anonym von Tränen und Verzweiflung auf den unteren Decks, wo die Infektionsrate die Kapazitäten längst gesprengt hat. Passagiervertreter fordern eine sofortige Erklärung für diese Bevorzugung, während die Schiffsführung jede Stellungnahme ablehnt. <br><br>
+    Experten warnen nun, dass diese Entscheidung den bereits schwelenden Unmut an Bord in eine offene Meuterei verwandeln könnte. In den Maschinenräumen soll es bereits zu ersten Arbeitsverweigerungen gekommen sein. "Wenn der Kapitän gerettet wird, während wir hier unten ersticken, dann fährt dieses Schiff nirgendwo mehr hin", zitiert ein Insider die Stimmung der Mannschaft. Gleichzeitig kursieren Gerüchte über eine geheime Evakuierungsliste für die Führungsriege, was die Paranoia unter den Gästen weiter befeuert. <br><br>
+    Die ethische Debatte erreicht derweil auch das Festland. Bioethiker diskutieren weltweit über diesen Präzedenzfall: Darf eine Schlüsselposition gegen ein Menschenleben aufgewogen werden? Während die MS Stellamaris ziellos auf dem Ozean treibt, wird die Krankenstation Deck 4 zum Schauplatz einer Tragödie, die in die Geschichte der Seefahrt eingehen wird. Die Sauerstoffvorräte für die restlichen Infizierten werden laut internen Dokumenten nur noch wenige Stunden ausreichen...`;
+        }
+        else if (rawName.includes("Fleischer") || rawName.includes("Sängerin")) {
+            identifier = "eine prominente Schlagersängerin";
+            headline = `Estrella Virus anbord Kreuzfahrtschiff MS Stellamaris - ${identifier} bekommt einziges Beatmungsgerät!`;
+            articleText = `Die Nachricht verbreitete sich wie ein Lauffeuer über die Bordlautsprecher: Die prominente Künstlerin ${rawName} erhält die lebensrettende Unterstützung. Die Sängerin, die erst vor Monaten ihren Kampf gegen eine Krebserkrankung öffentlich machte, ist nun erneut im Überlebenskampf. <br><br>
+    Kritiker weisen jedoch auf die massiven politischen Verstrickungen hin: Dass sie die Ehefrau des amtierenden Innenministers ist, lässt die Entscheidung des Bordarztes in einem höchst zweifelhaften Licht erscheinen. War es eine rein medizinische Abwägung oder gab es direkten Druck aus Berlin? Während Fans an Land Kerzen für ihr Idol anzünden, eskaliert die Stimmung auf dem Schiff. Der Vorwurf der Klassengesellschaft im Angesicht des Todes steht im Raum. <br><br>
+    Auf den Gängen fordern Angehörige anderer Erkrankter Transparenz, während bewaffnetes Sicherheitspersonal den Zugang zur Intensivstation riegelt. "Es ist ein Skandal, dass hier nach Bekanntheitsgrad und politischem Gewicht entschieden wird", brüllte ein aufgebrachter Gast vor der Absperrung. Die Reederei versucht derweil, die Wogen zu glätten und spricht von einer "rein medizinischen Prognose", die zugunsten der Künstlerin ausgefallen sei. <br><br>
+    Doch interne Emails, die der Redaktion zugespielt wurden, deuten auf ein Telefonat zwischen dem Krisenstab der Regierung und der Schiffsleitung hin, das nur Minuten vor der Entscheidung stattfand. Die politische Dimension dieser Wahl könnte für den Innenminister zum Verhängnis werden, sollte sich bestätigen, dass hier Vorrechte erkauft oder erzwungen wurden. Unterdessen kämpft das medizinische Personal auf Deck 4 mit den Tränen, während sie zwei weitere Patienten über den Tod informieren müssen, für die es nun keine technische Rettung mehr gibt...`;
+        }
+        else if (rawName.includes("Masseur")) {
+            identifier = "ein philippinischer Masseur";
+            headline = `Estrella Virus anbord Kreuzfahrtschiff MS Stellamaris - ${identifier} bekommt einziges Beatmungsgerät!`;
+            articleText = `In einer Entscheidung, die alle bisherigen Spekulationen über Bord wirft, wurde bekanntgegeben, dass ${rawName}, ein Masseur aus dem SPA-Bereich, das einzige Beatmungsgerät erhält. Der philippinische Staatsangehörige wurde vom medizinischen Personal aufgrund seiner Vitalwerte und Prognosen ausgewählt. <br><br>
+    Diese Entscheidung sorgt für fassungslose Gesichter unter den wohlhabenden Passagieren der ersten Klasse, die sich einen Vorrang erkaufen wollten. Insider berichten, dass der Bordarzt ein bewusstes Zeichen gegen die soziale Hierarchie setzen wollte. In den Unterkünften der Crew wird der Masseur bereits als Symbol für Gerechtigkeit gefeiert, während die Schiffsführung händringend versucht, die Kontrolle zu behalten. <br><br>
+    "Wir sind alle gleich vor dem Virus", soll der Chefarzt gesagt haben, bevor er die Anweisung gab, den Masseur anzuschließen. Doch die Ruhe ist trügerisch. In den Luxus-Suiten auf Deck 9 bildet sich Widerstand. Wohlhabende Industrielle drohen mit Klagen in Millionenhöhe und fordern eine "angemessene Berücksichtigung ihres Status". Die Stimmung ist hochexplosiv. <br><br>
+    Für die philippinische Community an Bord ist dieser Moment jedoch ein seltener Sieg der Menschlichkeit. In der Bordküche und den Wäschereien wird die Arbeit unterbrochen, um gemeinsam für ihren Kollegen zu beten. Es ist ein stiller Protest gegen die jahrelange Unsichtbarkeit des Servicepersonals. Währenddessen treibt das Schiff weiter in internationalen Gewässern, da kein Hafen die MS Stellamaris aufnehmen will. Der Masseur ist nun nicht mehr nur ein Patient, er ist das Zentrum eines sozialen Experiments geworden, dessen Ausgang ungewiss ist. Die Vorräte an Beruhigungsmitteln für die aufgebrachten Gäste gehen zur Neige...`;
+        }
+        else if (rawName.includes("Niemand")) {
+            headline = "Estrella Virus anbord Kreuzfahrtschiff MS Stellamaris - 3 Personen in Lebensgefahr, es wird jedoch kein Beatmungsgerät angeschlossen!";
+            articleText = `Der absolute moralische Super-GAU ist eingetreten. Da sich weder die medizinische Leitung noch die Kapitänsriege auf einen einzigen Patienten einigen konnte, blieb das rettende Gerät bis zum Verstreichen der kritischen Zeitmarke ungenutzt im Depot. Die ethische Lähmung der Verantwortlichen führt nun dazu, dass drei Menschen gleichzeitig dem Tod geweiht sind. <br><br>
+    Augenzeugen berichten von lautstarken Auseinandersetzungen im Kommandoraum, die beinahe handgreiflich wurden, während sich der Zustand der Patienten auf der Isolierstation dramatisch verschlechterte. Diese Unfähigkeit zur Entscheidung ist ein vernichtendes Urteil über die Krisenfestigkeit der Reederei. <br><br>
+    Auf dem gesamten Schiff herrscht nun eine Totenstille, unterbrochen nur von den Durchsagen der Quarantäne-Wachen. Angehörige der Betroffenen haben bereits rechtliche Schritte angekündigt, doch für die Patienten auf Deck 4 kommt jede Hilfe zu spät. Das Schiff treibt nun nicht nur medizinisch, sondern auch moralisch steuerlos auf dem Ozean. "Sie haben uns alle im Stich gelassen", schreibt ein Passagier in einem verzweifelten Post in den sozialen Medien, bevor das Bord-WLAN gekappt wurde. <br><br>
+    Die Welt blickt fassungslos auf diese Tragödie. Regierungen weigern sich weiterhin, Landegenehmigungen zu erteilen, da sie ein Übergreifen des Estrella-Virus auf das Festland fürchten. Die MS Stellamaris ist zum Geisterschiff geworden, auf dem die Zeit abläuft. In der Krankenstation haben die Ärzte nun die schwerste aller Aufgaben: Den Sterbenden beizustehen, während im Nebenraum die Technik ungenutzt bleibt, die ein Leben hätte retten können. Ein mahnendes Denkmal für das Scheitern menschlicher Ethik unter extremem Druck...`;
+        }
+
+        document.getElementById("mainHeadline").textContent = headline;
+        document.getElementById("articleText").innerHTML = articleText;
+        document.getElementById("byline").textContent = `REDAKTION STELLAMARIS | ANALYSE: ${rawName.toUpperCase()}`;
+    }
+
+    window.addEventListener("load", init);
+</script>
+</body>
+</html>
