@@ -3,12 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <title>Abstimmung – Ergebnisse</title>
-    <link rel="stylesheet" href="results.css">
-    <script src="results.js" defer></script>
+    <style>
+        /* Basic page setup */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: black;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #chart-container {
+            height: 100vh;        /* FULL screen height - no 90vh limit */
+            width: 90%;
+            padding: 20px;        /* Reduced padding */
+            display: flex;
+            flex-direction: column;
+            gap: 24px;           /* Reduced gap */
+            background: black;
+            align-items: stretch;
+        }
+
+        #chart {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;           /* Reduced gap */
+            width: 100%;
+            flex: 1;             /* Takes ALL available space */
+            overflow-y: auto;
+        }
+
+        /* One row per candidate - EXPANDED to fill space */
+        .bar-row {
+            display: flex;
+            flex-direction: column;
+            flex: 1;             /* **KEY: Each bar grows to fill available space** */
+            min-height: 140px;   /* Slightly taller minimum */
+        }
+
+        /* Top row: Name + Votes side by side - taller */
+        .bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+            height: 56px;        /* Taller header */
+        }
+
+        /* Candidate name - LARGE & READABLE */
+        .bar-name {
+            font-size: 42px;     /* Bigger text */
+            font-weight: bold;
+            line-height: 1.2;
+            flex: 1;
+        }
+
+        /* Votes next to name */
+        .bar-votes {
+            font-size: 32px;     /* Bigger text */
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        /* Bar container - fills ALL remaining space */
+        .bar-container {
+            flex: 1;             /* **KEY: Grows to fill ALL vertical space** */
+            display: flex;
+            align-items: center;
+            position: relative;
+            min-height: 70px;
+        }
+
+        /* Horizontal bar background - taller */
+        .bar-bg {
+            flex: 1;
+            height: 80px;        /* Taller bars */
+            border: 4px solid white;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Horizontal bar fill */
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: white;
+            transition: width 0.6s ease;
+            border-radius: 0;
+        }
+
+        /* Percentage label - always visible */
+        .bar-percent {
+            position: absolute;
+            right: 24px;
+            font-size: 32px;     /* Bigger text */
+            font-weight: bold;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 2px solid white;
+            line-height: 1.2;
+            min-width: 70px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div id="chart-container">
     <div id="chart"></div>
 </div>
+
+<script>
+    let bars = {};
+
+    async function init() {
+        await updateResults();
+        setInterval(updateResults, 1000);
+    }
+
+    async function updateResults() {
+        try {
+            const resp = await fetch("/api/get-results");
+            if (!resp.ok) return;
+
+            const res = await resp.json();
+            if (!res || !res.result) return;
+
+            updateChart(res.result);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function updateChart(results) {
+        const chart = document.getElementById("chart");
+        if (!chart) return;
+
+        const totalVotes = results.reduce((s, r) => s + r[1], 0);
+
+        // Clear existing bars to ensure proper reordering
+        Object.values(bars).forEach(({ row }) => row.remove());
+        bars = {};
+
+        results
+            .sort((a, b) => b[1] - a[1])
+            .forEach(([name, votes]) => {
+                const percent = totalVotes > 0
+                    ? (votes / totalVotes) * 100
+                    : 0;
+
+                const row = document.createElement("div");
+                row.className = "bar-row";
+
+                const header = document.createElement("div");
+                header.className = "bar-header";
+
+                const nameEl = document.createElement("div");
+                nameEl.className = "bar-name";
+                nameEl.textContent = name;
+
+                const votesEl = document.createElement("div");
+                votesEl.className = "bar-votes";
+
+                const barContainer = document.createElement("div");
+                barContainer.className = "bar-container";
+
+                const percentEl = document.createElement("div");
+                percentEl.className = "bar-percent";
+
+                const barBg = document.createElement("div");
+                barBg.className = "bar-bg";
+
+                const barFill = document.createElement("div");
+                barFill.className = "bar-fill";
+
+                barBg.appendChild(barFill);
+                barContainer.append(percentEl, barBg);
+                header.append(nameEl, votesEl);
+                row.append(header, barContainer);
+                chart.appendChild(row);
+
+                bars[name] = { row, barFill, percentEl, votesEl };
+
+                barFill.style.width = percent + "%";
+                percentEl.textContent = percent.toFixed(1) + "%";
+                votesEl.textContent = votes + " Stimmen";
+            });
+    }
+
+    window.addEventListener("load", init);
+</script>
 </body>
 </html>

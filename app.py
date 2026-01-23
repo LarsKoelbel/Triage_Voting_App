@@ -41,19 +41,19 @@ def index():
 
 # Serve index.html at /triage
 @app.route('/results')
-@requires_auth
+#@requires_auth
 def res_overview():
 
     return send_from_directory('static', 'results.html')
 
 @app.route('/chart')
-@requires_auth
+#@requires_auth
 def res_chart():
 
     return send_from_directory('static', 'results2.html')
 
 @app.route('/manual')
-@requires_auth
+#@requires_auth
 def manual():
     return send_from_directory('static', 'manual.html')
 
